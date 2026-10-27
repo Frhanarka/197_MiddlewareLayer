@@ -113,3 +113,11 @@ app.use((req, res, next) => {
         }
     }
 
+    app.get('/', async (req, res) => {
+        const result = await pool.query(
+            'SELECT * FROM biodata ORDER BY id'
+        )
+
+        return successResponse(res, "data berhasil diambil", result.rows)
+    })
+
