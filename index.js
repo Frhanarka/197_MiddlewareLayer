@@ -71,7 +71,7 @@ app.use((req, res, next) => {
                 allowUnknown: false,
             });
 
-            if error) {
+            if (error) {
                 return errorResponse(
                     res,
                     "Validasi input gagal",
@@ -80,7 +80,10 @@ app.use((req, res, next) => {
                         field: item.path.join('.'),
                         message: item.message,
                     }))
-                );
+                )
             }
             
-            reqbody = value;
+            req.body = value;
+            next();
+        }
+    }
