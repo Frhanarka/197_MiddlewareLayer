@@ -9,7 +9,7 @@ const { Pool } = pg;
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  database: 'mahasiswa',
+  database: 'Mahasiswa',
   password: 'frh456',
   port: 5432,
 });
@@ -63,7 +63,7 @@ app.use((req, res, next) => {
         id: joi.number().integer().positive().required(),
     });
 
-    function validate(schema) {
+    function validateBody(schema) {
         return (req, res, next) => {
             const { error, value } = schema.validate(req.body, {
                 abortEarly: false,
@@ -123,7 +123,7 @@ app.use((req, res, next) => {
 
     app.post(
         '/biodata',
-        validate(biodataSchema),
+        validateBody(biodataSchema),
         async (req, res) => {
             const { id, nama, nim, kelas } = req.body;
 
@@ -139,8 +139,8 @@ app.use((req, res, next) => {
     app.put(
         '/biodata/:id',
         validateparams(idSchema),
-        validatebody(biodataSchema.fork(
-            [nama, nim, kelas],
+        validateBody(biodataSchema.fork(
+            ['nama', 'nim', 'kelas'],
             field => field.required()
         ).fork(['id'], field => field.forbidden())),
         async (req, res) => {
@@ -190,4 +190,8 @@ app.use((req, res, next) => {
             return next(err)
         }
         return errorResponse(res, "terjadi kesalahan", 500)
+    })
+
+    app.listen(port, () => {
+        console.log(`app running on port ${port}.`)
     })
