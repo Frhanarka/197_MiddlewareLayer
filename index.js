@@ -158,6 +158,36 @@ app.use((req, res, next) => {
 
         return successResponse(res, "data berhasil diupdate", result.rows[0])
         }
-    )
+    );
 
-    
+    app.delete(
+        '/biodata/:id',
+        validateparams(idSchema),
+        async (req, res) => {
+            const { id } = req.params;
+
+            const result = await pool.query(
+                'DELETE FROM biodata WHERE id = $1 RETURNING *',
+                [id]
+            )
+
+            if (result.rowCount === 0) {
+                return errorResponse(res, "data tidak ditemukan", 404)
+            }
+            return successResponse(res, "data berhasil dihapus", result.rows[0]
+            )
+        }
+    );
+
+    app.use((req, res) => {
+        return errorResponse(res, "endpoint tidak ditemukan", 404)
+    })
+
+    app.use((err, req, res, next) => {
+        console.error(err)
+
+        if (err.headersSent) {
+            return next(err)
+        }
+        return errorResponse(res, "terjadi kesalahan", 500)
+    })
