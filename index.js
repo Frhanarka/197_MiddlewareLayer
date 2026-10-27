@@ -51,3 +51,5 @@ app.use((req, res, next) => {
             error: details
         })
     }
+
+    const biodataSchema = joi.object({
