@@ -87,3 +87,13 @@ app.use((req, res, next) => {
             next();
         }
     }
+
+    function validateparams(schema) {
+        return (req, res, next) => {
+            const { error, value } = schema.validate(req.params, {
+                abortEarly: false,
+                convert: true,
+                allowUnknown: false,
+            });
+
+
